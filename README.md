@@ -5,7 +5,7 @@
 - *Laborationsuppgift*:
 [1-1-gissa-det-hemliga-talet.pdf](https://github.com/1dv409/kursmaterial/raw/master/Laborationsuppgifter/1-1-gissa-det-hemliga-talet.pdf)
 
-- *Senast redovisad*: **vecka 49 (2014)**
+- *Senast redovisad*: **vecka 49 (2015)**
 
 ----------
 
