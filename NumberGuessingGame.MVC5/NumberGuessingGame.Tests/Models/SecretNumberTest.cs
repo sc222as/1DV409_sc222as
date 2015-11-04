@@ -11,7 +11,7 @@ using NumberGuessingGame.Models;
 namespace NumberGuessingGame.Tests.Models
 {
     [TestClass]
-    class SecretNumberTest
+    public class SecretNumberTest
     {
         [TestMethod]
         public void CheckConstructor()
