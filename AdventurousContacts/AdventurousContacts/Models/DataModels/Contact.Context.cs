@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AdventurousContacts.Models
+namespace AdventurousContacts.Models.DataModels
 {
     using System;
     using System.Data.Entity;
@@ -15,10 +15,10 @@ namespace AdventurousContacts.Models
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class Entities : DbContext
+    public partial class Entities1 : DbContext
     {
-        public Entities()
-            : base("name=Entities")
+        public Entities1()
+            : base("name=Entities1")
         {
         }
     
@@ -27,7 +27,7 @@ namespace AdventurousContacts.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<Contact> Contact { get; set; }
     
         public virtual int sp_alterdiagram(string diagramname, Nullable<int> owner_id, Nullable<int> version, byte[] definition)
         {

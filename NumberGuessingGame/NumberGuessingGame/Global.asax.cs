@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Optimization;
+using NumberGuessingGame.App_Start;
 
 namespace NumberGuessingGame
 {
@@ -13,6 +15,8 @@ namespace NumberGuessingGame
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
 }

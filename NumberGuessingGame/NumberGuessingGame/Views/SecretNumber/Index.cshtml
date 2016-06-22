@@ -1,22 +1,42 @@
-﻿@model NumberGuessingGame.Models.SecretNumber
+﻿@model NumberGuessingGame.Models.ViewModels.ViewModel
+<h1>Welcome to Guess The Secret Number!</h1>
+<h2>@Model.HeaderText </h2>
+<p>The Secret Number is somewhere between 1 and 100. Can you find it with only 7 guesses?</p>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()    
-    <div class="form-horizontal">
-        <h4>SecretNumber</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="text" name="number" id="number" />
-                <input type="submit" value="Guess"/>
-                
-            </div>
-        </div>
-    </div>
+    @Html.AntiForgeryToken();
+    @Html.ValidationSummary();
+    @Html.EditorFor(m => m.Guess);
+    <input type="submit" value="Guess" id ="Guess" />
 }
 
-<div>
-    @Html.ActionLink("Restart", "Index")
-</div>
+@if (Model != null)
+{
+    <p>Guessed Numbers:</p>
+    <ul>
+        @foreach (var number in Model.SecretNumber.GuessedNumbers)      //krav 3 och krav 4
+        {
+            <li>@number.Number @number.Outcome </li>       
+        }
+    </ul>
+
+    <p>             
+        @Model.result                                       
+    </p>
+
+        @Html.Partial("Restart")
+        
+    
+
+}
+
+@section Scripts
+{
+    <script>
+        $(function () {
+            $("#Guess").focus();
+        });
+    </script>
+}
+

@@ -4,73 +4,68 @@ using System.Linq;
 using System.Web;
 
 namespace NumberGuessingGame.Models
-{    
-    public class SecretNumber 
+{
+    public class SecretNumber
     {
 
         private List<GuessedNumber> _guessedNumbers;
-        private GuessedNumber _lastGuessedNumber;                           // Alla Fields
+        private GuessedNumber _lastGuessedNumber;
         private int? _number;
-        public const int MaxNumberOfGuesses = 7;
-
-
+        public const int MaxNumberOfGuesses = 7;// krav 1
+        
+        // Returnerar True eller false beroende på vad Counten (antalet gissningar) är.
+        // Returnerar även False om man har gissar rätt.
         public bool CanMakeGuess
         {
-
             get
             {
-                if (Count > MaxNumberOfGuesses && _lastGuessedNumber.Outcome != Outcome.Right)             // Returnerar True eller false beroende på vad Counten (antalet gissningar) är.
-                    return false;                                                                          // Returnerar även False om man har gissar rätt.
-                    else
+                if (Count < MaxNumberOfGuesses && _lastGuessedNumber.Outcome != Outcome.Right)
+                {
                     return true;
-            }
-
-
-        }                                                                   
-        public int Count
-        {
-
-            
-            get
-            {
-                //if (_guessedNumbers != null)
-                //{
-                    return _guessedNumbers.Count;               //Tar ANTALET nummer i _guessednumbers och returnerar det värdet
-                //}
-                //else return 0;
-            }    
+                }
+                else return false;
+                                                                                                    
+            }                                                                                       
         }
 
-        public IList<GuessedNumber> GuessedNumbers
+
+        //Tar ANTALET nummer i _guessednumbers och returnerar det värdet
+        public int Count//krav 1 och krav 5                               
+        {
+            get
+            {               
+                return _guessedNumbers.Count;               
+                
+            }
+        }
+
+        //Returnerar en lista på gissade siffror. Har använt metoden AsReadOnly() som löser alla(?) privacy leaks problem.
+        public IReadOnlyList<GuessedNumber> GuessedNumbers
         {
             get
             {
-                return _guessedNumbers.AsReadOnly();        //Returnerar en lista på gissade siffror. Har använt metoden AsReadOnly() som löser alla(?) privacy leaks problem.
-
-
+                return _guessedNumbers.AsReadOnly();        
             }
-
-
-
         }
+        //Krav 11 Returnerar senaste gissade talet.
         public GuessedNumber LastGuessedNumber
         {
             get
             {
-                return _lastGuessedNumber;                  //Returnerar senaste gissade talet.
+                return _lastGuessedNumber;                  
 
             }
 
         }
+
+        //Det hemliga Numret
         public int? Number {
 
 
 
             get
             {
-
-                return CanMakeGuess ? null : _number;       //
-
+                return CanMakeGuess ? null : _number;    //Krav 8, 12 och 13. Så länge du kan gissa så får du inte det hemliga numret.       
             }
 
 
@@ -78,69 +73,79 @@ namespace NumberGuessingGame.Models
 
             private set
             {
-
                 _number = value;
+            }
 
-            }               
-                
-                
+
         }
-        
-        
-
+        //Rensar _guessedNumbers listan, Initierar Random, Tilldelar _number ett värde mellan 1 och 100 (Krav 8) samt ser till att Outcome sätts till Outcome.Indefinite
         public void Initialize()
         {
-            if (_guessedNumbers != null)
-            { 
-            _guessedNumbers.Clear();                        //Rensar _guessedNumbers listan
-            }                       
-            Random random = new Random();                   //Initierar Random
-            _number = random.Next(1, 100);                  //Tilldelar _number ett värde mellan 1 och 100
-            _lastGuessedNumber = new GuessedNumber { Number = null, Outcome = Outcome.Indefinite };
+            _guessedNumbers.Clear();                        
+            Random random = new Random();                   
+            _number = random.Next(1, 100);                            
+            _lastGuessedNumber = new GuessedNumber { Number = null, Outcome = Outcome.Indefinite };            
         }
 
+        
 
 
+        
+
+
+        // Krav 9 och 10 Kontrollerar vad utkomsten av MakeGuess är
         public Outcome MakeGuess(int guess)
         {
-            if (guess < 1 || guess >100)
+            if(guess < 1 || guess > 100) //Krav 2. Om det skulle gå förbi klient valideringen så crashar det här om man gissar på mindre än 1 och högre än 100
             {
-                throw new ArgumentOutOfRangeException();        //TODO
+                throw new ArgumentOutOfRangeException();
+            }           
+
+            if (_guessedNumbers.Exists(m => m.Number == guess)) //krav 6. Om gissningen finns i listan GuessedNumber så får Outcome värdet OldGuess
+            {
+                _lastGuessedNumber.Outcome = Outcome.OldGuess;
             }
-            if (!CanMakeGuess)
+            else
             {
 
-                _lastGuessedNumber.Outcome = Outcome.NoMoreGuesses;
-            }
-            //if (_guessedNumbers.Exists(guess))                  //TODO cannot convert from int to system.predicate
-            //{
-            //    _lastGuessedNumber.Outcome = Outcome.OldGuess;
-            //}  
-            if (guess > _number)
-            {
-                _lastGuessedNumber.Outcome = Outcome.Low;
-            }
-            if (guess < _number)
-            {
-                _lastGuessedNumber.Outcome = Outcome.High;
-            }
-            if (guess == _number)
-            {
-                _lastGuessedNumber.Outcome = Outcome.Right;
+                if (!CanMakeGuess)
+                {
+                    _lastGuessedNumber.Outcome = Outcome.NoMoreGuesses;
+                }
+                else
+                {
+                    if (guess > _number)
+                    {
+                        _lastGuessedNumber.Outcome = Outcome.High;
+                    }
+                    if (guess < _number)
+                    {
+                        _lastGuessedNumber.Outcome = Outcome.Low;
+                    }
+                    if (guess == _number)
+                    {
+                        _lastGuessedNumber.Outcome = Outcome.Right;
+                    }
+                    _lastGuessedNumber.Number = guess;
+                    if (CanMakeGuess)
+                    {
+                        _guessedNumbers.Add(_lastGuessedNumber);
+                    }
+                }
+
             }
 
-            _guessedNumbers.Add(_lastGuessedNumber);
-            _lastGuessedNumber.Number = guess;            
             return _lastGuessedNumber.Outcome;
-            
-            
         }
 
+        //Constructorn kallar på Metoden Initialize
         public SecretNumber()
-            {
-            Initialize();                                   // Kallar på Metoden Initialize
-            _guessedNumbers = new List<GuessedNumber>();
-            }
+        {
+            _guessedNumbers = new List<GuessedNumber>(MaxNumberOfGuesses);
+            Initialize();
+        }
+
+
 
     }
 }

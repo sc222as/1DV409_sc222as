@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="dv409_AdventureWorksAssignmentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="AdventureWorksAssignmentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="ContactID" />
@@ -78,14 +78,14 @@
           <Parameter Name="LastName" Type="nvarchar" Mode="In" />
           <Parameter Name="EmailAddress" Type="nvarchar" Mode="In" />
         </Function>
-        <EntityContainer Name="dv409_AdventureWorksAssignmentModelStoreContainer">
+        <EntityContainer Name="AdventureWorksAssignmentModelStoreContainer">
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="Person" store:Type="Tables" />
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="dv409_AdventureWorksAssignmentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="AdventureWorksAssignmentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="ContactID" />
@@ -95,8 +95,8 @@
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Contacts" EntityType="Self.Contact" />
+        <EntityContainer Name="Entities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Contact" EntityType="Self.Contact" />
           <FunctionImport Name="sp_alterdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
@@ -113,11 +113,11 @@
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(dv409_AdventureWorksAssignmentModel.sp_helpdiagramdefinition_Result)">
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(AdventureWorksAssignmentModel.sp_helpdiagramdefinition_Result)">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(dv409_AdventureWorksAssignmentModel.sp_helpdiagrams_Result)">
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(AdventureWorksAssignmentModel.sp_helpdiagrams_Result)">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -148,7 +148,7 @@
             <Parameter Name="LastName" Mode="In" Type="String" />
             <Parameter Name="EmailAddress" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="uspGetContact" ReturnType="Collection(dv409_AdventureWorksAssignmentModel.uspGetContact_Result)">
+          <FunctionImport Name="uspGetContact" ReturnType="Collection(AdventureWorksAssignmentModel.uspGetContact_Result)">
             <Parameter Name="ContactID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="uspRemoveContact">
@@ -183,9 +183,9 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="dv409_AdventureWorksAssignmentModelStoreContainer" CdmEntityContainer="Entities">
-          <EntitySetMapping Name="Contacts">
-            <EntityTypeMapping TypeName="dv409_AdventureWorksAssignmentModel.Contact">
+        <EntityContainerMapping StorageEntityContainer="AdventureWorksAssignmentModelStoreContainer" CdmEntityContainer="Entities1">
+          <EntitySetMapping Name="Contact">
+            <EntityTypeMapping TypeName="AdventureWorksAssignmentModel.Contact">
               <MappingFragment StoreEntitySet="Contact">
                 <ScalarProperty Name="ContactID" ColumnName="ContactID" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -193,21 +193,39 @@
                 <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
               </MappingFragment>
             </EntityTypeMapping>
+            <EntityTypeMapping TypeName="AdventureWorksAssignmentModel.Contact">
+              <ModificationFunctionMapping>
+                <UpdateFunction FunctionName="AdventureWorksAssignmentModel.Store.uspUpdateContact">
+                  <ScalarProperty Name="EmailAddress" ParameterName="EmailAddress" Version="Current" />
+                  <ScalarProperty Name="LastName" ParameterName="LastName" Version="Current" />
+                  <ScalarProperty Name="FirstName" ParameterName="FirstName" Version="Current" />
+                  <ScalarProperty Name="ContactID" ParameterName="ContactID" Version="Current" />
+                </UpdateFunction>
+                <DeleteFunction FunctionName="AdventureWorksAssignmentModel.Store.uspRemoveContact">
+                  <ScalarProperty Name="ContactID" ParameterName="ContactID" />
+                </DeleteFunction>
+                <InsertFunction FunctionName="AdventureWorksAssignmentModel.Store.uspAddContactEF">
+                  <ScalarProperty Name="EmailAddress" ParameterName="EmailAddress" />
+                  <ScalarProperty Name="LastName" ParameterName="LastName" />
+                  <ScalarProperty Name="FirstName" ParameterName="FirstName" />
+                </InsertFunction>
+              </ModificationFunctionMapping>
+            </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="dv409_AdventureWorksAssignmentModel.Store.sp_alterdiagram" />
-          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="dv409_AdventureWorksAssignmentModel.Store.sp_creatediagram" />
-          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="dv409_AdventureWorksAssignmentModel.Store.sp_dropdiagram" />
-          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="dv409_AdventureWorksAssignmentModel.Store.sp_helpdiagramdefinition">
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="AdventureWorksAssignmentModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="AdventureWorksAssignmentModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="AdventureWorksAssignmentModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="AdventureWorksAssignmentModel.Store.sp_helpdiagramdefinition">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="dv409_AdventureWorksAssignmentModel.sp_helpdiagramdefinition_Result">
+              <ComplexTypeMapping TypeName="AdventureWorksAssignmentModel.sp_helpdiagramdefinition_Result">
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="dv409_AdventureWorksAssignmentModel.Store.sp_helpdiagrams">
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="AdventureWorksAssignmentModel.Store.sp_helpdiagrams">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="dv409_AdventureWorksAssignmentModel.sp_helpdiagrams_Result">
+              <ComplexTypeMapping TypeName="AdventureWorksAssignmentModel.sp_helpdiagrams_Result">
                 <ScalarProperty Name="Database" ColumnName="Database" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -216,14 +234,14 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="dv409_AdventureWorksAssignmentModel.Store.sp_renamediagram" />
-          <FunctionImportMapping FunctionImportName="uspAddContact" FunctionName="dv409_AdventureWorksAssignmentModel.Store.uspAddContact" />
-          <FunctionImportMapping FunctionImportName="uspAddContactEF" FunctionName="dv409_AdventureWorksAssignmentModel.Store.uspAddContactEF" />
-          <FunctionImportMapping FunctionImportName="uspAddContact_OUTPUT" FunctionName="dv409_AdventureWorksAssignmentModel.Store.uspAddContact_OUTPUT" />
-          <FunctionImportMapping FunctionImportName="uspAddContact_SELECT" FunctionName="dv409_AdventureWorksAssignmentModel.Store.uspAddContact_SELECT" />
-          <FunctionImportMapping FunctionImportName="uspGetContact" FunctionName="dv409_AdventureWorksAssignmentModel.Store.uspGetContact">
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="AdventureWorksAssignmentModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="uspAddContact" FunctionName="AdventureWorksAssignmentModel.Store.uspAddContact" />
+          <FunctionImportMapping FunctionImportName="uspAddContactEF" FunctionName="AdventureWorksAssignmentModel.Store.uspAddContactEF" />
+          <FunctionImportMapping FunctionImportName="uspAddContact_OUTPUT" FunctionName="AdventureWorksAssignmentModel.Store.uspAddContact_OUTPUT" />
+          <FunctionImportMapping FunctionImportName="uspAddContact_SELECT" FunctionName="AdventureWorksAssignmentModel.Store.uspAddContact_SELECT" />
+          <FunctionImportMapping FunctionImportName="uspGetContact" FunctionName="AdventureWorksAssignmentModel.Store.uspGetContact">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="dv409_AdventureWorksAssignmentModel.uspGetContact_Result">
+              <ComplexTypeMapping TypeName="AdventureWorksAssignmentModel.uspGetContact_Result">
                 <ScalarProperty Name="ContactID" ColumnName="ContactID" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
@@ -231,8 +249,8 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="uspRemoveContact" FunctionName="dv409_AdventureWorksAssignmentModel.Store.uspRemoveContact" />
-          <FunctionImportMapping FunctionImportName="uspUpdateContact" FunctionName="dv409_AdventureWorksAssignmentModel.Store.uspUpdateContact" />
+          <FunctionImportMapping FunctionImportName="uspRemoveContact" FunctionName="AdventureWorksAssignmentModel.Store.uspRemoveContact" />
+          <FunctionImportMapping FunctionImportName="uspUpdateContact" FunctionName="AdventureWorksAssignmentModel.Store.uspUpdateContact" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -247,7 +265,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
