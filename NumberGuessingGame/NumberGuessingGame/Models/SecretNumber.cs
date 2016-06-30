@@ -83,7 +83,7 @@ namespace NumberGuessingGame.Models
         {
             _guessedNumbers.Clear();                        
             Random random = new Random();                   
-            _number = random.Next(1, 100);                            
+            _number = random.Next(1, 101);                            
             _lastGuessedNumber = new GuessedNumber { Number = null, Outcome = Outcome.Indefinite };            
         }
 
